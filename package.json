@@ -1,0 +1,22 @@
+{
+  "name": "scripts",
+  "version": "1.0.0",
+  "description": "",
+  "main": "constants.js",
+  "dependencies": {
+    "@google-cloud/bigtable": "^3.12.0",
+    "axios": "^0.27.2",
+    "crc-32": "^1.2.2",
+    "db-driver-v2-client": "2.5.2",
+    "dbdriver": "^1.13.1",
+    "lodash": "^4.17.21",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
