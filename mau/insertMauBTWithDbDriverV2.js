@@ -2,7 +2,7 @@ const DBDriverClientV2 = require('db-driver-v2-client').DBClientV2;
 const dbDriverBase64Util = require('db-driver-v2-client').Base64EncodeDecodeUtil;
 const crc32 = require('crc-32');
 const {v4: uuidv4} = require('uuid');
-const constants = require('./constants');
+const constants = require('../constants');
 const { Bigtable, v2 } = require("@google-cloud/bigtable");
 
 class InsertMauBTWithDbDriverV2 {

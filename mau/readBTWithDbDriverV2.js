@@ -1,7 +1,7 @@
 const DBDriverClientV2 = require('db-driver-v2-client').DBClientV2;
 const dbDriverBase64Util = require('db-driver-v2-client').Base64EncodeDecodeUtil;
 const { default: Axios } = require('axios');
-const constants = require('./constants');
+const constants = require('../constants');
 
 
 class ReadBTWithDbDriverV2 {

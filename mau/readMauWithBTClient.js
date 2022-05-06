@@ -1,5 +1,5 @@
 const {Bigtable} = require('@google-cloud/bigtable');
-const constants = require('./constants');
+const constants = require('../constants');
 
 class ReadMauWithBTClient {
 
