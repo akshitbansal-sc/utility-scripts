@@ -11,7 +11,7 @@ module.exports = {
     },
     mau: {
         mauLang: 'dbDriverPOC',
-        mauPrimaryKey: 'dbDriverPOC',
+        shard: 'dbDriverPOC',
         mauTableName: 'mauNotifications',
         db: 'sharechat-bt-test',
         projectId: "sharechat-migration-test"

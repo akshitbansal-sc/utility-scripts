@@ -16,7 +16,7 @@ const getRequiredPackages = () => {
     return [readers, writers];
 }
 
-const noOfRecords = 10;
+const noOfRecords = 1;
 
 
 const checkBody = (obj1, obj2) => {
@@ -32,7 +32,7 @@ async function verify() {
         const writer = new writers[i]();
         console.error('writing with', writers[i].name);
         // console.log('created data' , 
-        await writer.insertData(noOfRecords)
+        await writer.insertData(noOfRecords);
         // );
         console.error('written with', writers[i].name);
         let readData = [];

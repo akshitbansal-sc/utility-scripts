@@ -22,24 +22,19 @@ class InsertMauBTWithBTClient {
         for (let i = 0; i < no; ++i) {
             userIds.push(Math.abs(crc32.str(uuidv4())));
         }
-        // console.log(userIds);
         return await this.#insertUsers(userIds);
     }
 
     doubleToByteArray(number) {
-        const buffer = new ArrayBuffer(8); // JS numbers are 8 bytes long, or 64 bits
-        // console.log(buffer);
-        const longNum = new Float64Array(buffer); // so equivalent to Float64
-        // console.log(longNum, buffer);
+        const buffer = new ArrayBuffer(8);
+        const longNum = new Float64Array(buffer);
         longNum[0] = number;
-        // console.log(longNum, buffer);
-        const res = Array.from(new Uint8Array(buffer)).reverse(); // reverse to get little endian
-        // console.log(longNum, buffer, res);
+        const res = Array.from(new Uint8Array(buffer)).reverse();
         return res;
     }
 
     async #insertUsers(userIds) {
-        const expire = Date.now() + 1 * 60 * 1000;
+        const expire = Date.now() + 60 * 60 * 1000;
         const rowsToInsert = userIds.map((userId) => ({
             key: `${this.langShard}#${userId}`,
             data: {
@@ -62,8 +57,6 @@ class InsertMauBTWithBTClient {
                 },
             }
         }));
-        // console.log(rowsToInsert[0].data.a1);
-        // console.log(rowsToInsert.map(row => row.key));
         try {
             await this.table.insert(rowsToInsert);
             return rowsToInsert;

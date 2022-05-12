@@ -2,10 +2,6 @@ const {Bigtable} = require('@google-cloud/bigtable');
 const constants = require('../constants');
 
 class ReadMauWithBTClient {
-
-
-
-
     constructor() {
         this.mauBtClient = new Bigtable({ projectId: constants.mau.projectId })
             .instance(constants.mau.db).table(constants.mau.mauTableName);
@@ -25,6 +21,7 @@ class ReadMauWithBTClient {
                 resolve(true);
             });
         }).invoke();
+        // console.log(rows);
         return (rows);
     }
 

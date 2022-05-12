@@ -12,19 +12,11 @@ class ReadBTWithDbDriverV2 {
             serviceName: "sc-update-mau-v2",
             projectName: "SHARECHAT",
             environment: "STAGING",
-            // url: "http://localhost:9051"
         };
 
         this.dbDriver = new DBDriverClientV2(this.dbDriverConfiguration);
-
-        // this.dbDriver.connect(constants.driver.dbDriver.url);
-        this.tableName = 'mauNotifications';
-        this.primaryKey = constants.mau.mauPrimaryKey
+        this.primaryKey = constants.mau.shard;
 		this.tableName = constants.mau.mauTableName;
-		this.indexName = null;
-		this.onlyCount = null;
-		this.limit = 500;
-		this.sortAscending = true;
         this.numericFields = ['userId', 'expire'];
         this.serialisedFields = [];
     }
@@ -60,35 +52,50 @@ class ReadBTWithDbDriverV2 {
             // console.log(result);
             return (result);
         } catch(e) {
-            console.error(e.message);
+            console.error(e);
         }
         
     }
 
-    parseUserFromBTRowData(userInfo) {
-        let parsedObject = {};
-        // console.log(userInfo);
-        // for (const [name, value] of Object.entries(userInfo.key[0])) {
-        //     // console.log(name, value);
-        //     if (!value) continue;
-        //     parsedObject[name] = value;
-		// }
-		for (const [name, value] of Object.entries(userInfo.data)) {
-            // console.log(name, value);
-            if (!value) continue;
-			if (this.numericFields.includes(name)) {
-				parsedObject[name] = Buffer.from(value, 'base64').readDoubleBE(0);
-			} else {
-				parsedObject[name] = dbDriverBase64Util.decodeStringFromBase64(value);
-			}
-            // console.log(parsedObject);
-			if (this.serialisedFields.includes(name)) {
-				parsedObject[name] = JSON.parse(parsedObject[name])
-			}
+    async readRowsWithKeys() {
+        const keys = [
+            [ { name: 'rowKey', value: 'dbDriverPOC#0000000000295780963' } ],
+            [ { name: 'rowKey', value: 'dbDriverPOC#0000000000519872324' } ],
+            [ { name: 'rowKey', value: 'dbDriverPOC#0000000001096406963' } ],
+            [ { name: 'rowKey', value: 'dbDriverPOC#0000000001290550226' } ],
+            [ { name: 'rowKey', value: 'dbDriverPOC#0000000001849322531' } ]
+        ];
+        try {
+            const data = await this.dbDriver.batchReadRow(this.tableName, keys);
+            console.log(data.rows.map(this.parseUserFromBTRowData));
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+    parseUserFromBTRowData(data) {
+        if (!data || Object.keys(data).length === 0) {
+			return null;
 		}
-        return parsedObject;
+		const user = {};
+		for (const [ name, value ] of Object.entries(data.data)) { //remove .data for readRowsWithKeys
+			if (!value) { continue; }
+			let parsedValue;
+			switch (name) {
+			case 'expire':
+            case 'userId':
+            // the integer will be read by double BE
+            parsedValue = Buffer.from(value, 'base64').readDoubleBE(0);
+            break;
+			default:
+				// string will be read by decoding the string
+				parsedValue = dbDriverBase64Util.decodeStringFromBase64(value);
+			}
+			user[name] = parsedValue;
+		}
+		return user;
 	}
 }
 
-new ReadBTWithDbDriverV2().read();
+// new ReadBTWithDbDriverV2().read();
 module.exports = ReadBTWithDbDriverV2;

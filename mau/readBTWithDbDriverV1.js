@@ -7,20 +7,9 @@ class ReadBTWithDbDriverV1 {
     constructor() {
         this.dbDriver = dbDriver;
         this.dbDriver.connect(constants.driver.dbDriver.url);
-        this.tableName = 'mauNotifications';
-        this.primaryKey = constants.mau.mauPrimaryKey
-		this.tableName = constants.mau.mauTableName;
-		this.indexName = null;
-		this.onlyCount = null;
-		this.limit = 500;
-		this.sortAscending = true;
-		this.hashExp = '#language = ';
-		this.hashVal = { S: this.primaryKey };
-		this.rangeExp = null;
-		this.rangeVal =null;
-		this.expAttr = {
-			'#language': 'language'
-		};
+        this.tableName = constants.mau.mauTableName;
+        this.shard = constants.mau.shard;
+        this.language = constants.mau.mauLang;
     }
 
     async read() {
@@ -36,12 +25,12 @@ class ReadBTWithDbDriverV1 {
                 console.log('no data');
                 return;
             }
-            // console.log(Items);
             const result = [];
             for (const row of items) {
                 const user = this.parseUserFromBTRowData(row);
                 result.push(user);
             }
+            // console.log(result);
             return (result);
         } catch(e) {
             console.error(e.message);
@@ -51,19 +40,15 @@ class ReadBTWithDbDriverV1 {
     parseUserFromBTRowData(userInfo) {
         let user = {};
 		if (!userInfo || !userInfo.userId) {
-            // this.logger.error('UserInfo is undefined. Cannot send notification');
-            // return resolve(null);
             return null;
         }
         user.userId = Number(userInfo.userId.N);
         user.expire = Number(userInfo?.expire?.N);
-        user.language = constants.mau.mauLang;//userInfo.language ? userInfo.language.S : null;
-        // user.gender = userInfo.gender ? userInfo.gender.S : null;
-        // user.age = userInfo.ageRange ? userInfo.ageRange.S : null;
-        // user.city = userInfo.city ? userInfo.city.S : null;
+        user.language = this.language;
         user.state = userInfo.state ? userInfo.state.S : null;
 		return user;
 	}
 }
 
+// new ReadBTWithDbDriverV1().read();
 module.exports = ReadBTWithDbDriverV1;

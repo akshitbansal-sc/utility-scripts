@@ -2,14 +2,13 @@ const dbDriver = require('dbdriver');
 const crc32 = require('crc-32');
 const {v4: uuidv4} = require('uuid');
 const constants = require('../constants');
-const { Bigtable, v2 } = require("@google-cloud/bigtable");
 
 class InsertMauBTWithDbDriverV1 {
 
     constructor() {
         this.dbDriver = dbDriver;
         this.dbDriver.connect(constants.driver.dbDriver.url);
-        this.tableName = 'mauNotifications';
+        this.tableName = constants.mau.mauTableName;
         this.langShard = constants.mau.mauLang;
     }
 
@@ -41,6 +40,7 @@ class InsertMauBTWithDbDriverV1 {
                     if (err) {
                         return reject(err);
                     }
+                    console.log('done inserted', rowsToInsert.length);
                     return resolve(rowsToInsert);
                 });
             });
@@ -50,5 +50,5 @@ class InsertMauBTWithDbDriverV1 {
     }
 }
 
-// new InsertMauBTWithDbDriverV1().insertData();
+// new InsertMauBTWithDbDriverV1().insertData(5);
 module.exports = InsertMauBTWithDbDriverV1;
