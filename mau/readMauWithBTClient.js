@@ -1,5 +1,6 @@
 const {Bigtable} = require('@google-cloud/bigtable');
 const constants = require('../constants');
+const { parseUserFromBTWithBTClient } = require('./utility');
 
 class ReadMauWithBTClient {
     constructor() {
@@ -17,39 +18,13 @@ class ReadMauWithBTClient {
                 return reject(err);
             }).on('data', async (row) => {;
             // for (const row of rows) {
-                rows.push(await this.parseUserFromBTRowData(row.data));
+                rows.push(await parseUserFromBTWithBTClient(row.data));
                 resolve(true);
             });
         }).invoke();
         // console.log(rows);
         return (rows);
     }
-
-    async parseUserFromBTRowData(data) {
-        const columnFamilies = Object.keys(data);
-		if (!columnFamilies || !columnFamilies.length) {
-			return null;
-		}
-		const colFamilyData = data[columnFamilies[0]];
-		const user = {};
-		for (const colQualifier of Object.keys(colFamilyData)) {
-			let parsedValue;
-			const value = colFamilyData[colQualifier][0].value;
-			switch (colQualifier) {
-                case 'expire':
-                case 'userId':
-                    parsedValue = ((value).readDoubleBE(0));
-                    break;
-                default:
-                    parsedValue = value.toString();
-			}
-			user[colQualifier] = parsedValue;
-		}
-		return user;
-    }
-
-
-
 
 }
 // new ReadMauWithBTClient().read();

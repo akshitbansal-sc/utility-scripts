@@ -9,10 +9,10 @@ class InsertMauBTWithBTClient {
     constructor() {
         this.dbDriver = dbDriver;
         this.dbDriver.connect(constants.driver.dbDriver.url);
-        this.tableName = 'mauNotifications';
+        this.tableName = constants.mau.mauTableName;
         const bigtable = new Bigtable({ projectId: constants.mau.projectId });
         const instance = bigtable.instance(constants.mau.db);
-        this.langShard = constants.mau.mauLang;
+        this.langShard = constants.mau.shard;
         this.table = instance.table(this.tableName);
     }
 

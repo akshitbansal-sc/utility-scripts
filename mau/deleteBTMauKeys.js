@@ -4,15 +4,15 @@ const constants = require('../constants');
 class DeleteBTMauKeys {
 
     constructor() {
-        this.dbDriverConfiguration = {
+        const dbDriverConfiguration = {
             useSharedLibrary: true,
-            serviceName: "sc-update-mau-v2",
-            projectName: "SHARECHAT",
-            environment: "STAGING",
+            serviceName: constants.project.serviceName,
+            projectName: constants.project.id,
+            environment: constants.project.env,
         };
 
-        this.dbDriverV2 = new DBDriverClientV2(this.dbDriverConfiguration);
-        this.shard = constants.mau.shard
+        this.dbDriverV2 = new DBDriverClientV2(dbDriverConfiguration);
+        this.shard = constants.mau.shard;
 		this.tableName = constants.mau.mauTableName;
     }
 
@@ -20,7 +20,7 @@ class DeleteBTMauKeys {
     async deleteUsers() {
         const [{data}, err] = await this.dbDriverV2.fullTableScan(this.tableName).invoke();
         if (!data) {
-            console.log('done');
+            console.log('no data');
             return;
         }
         const keys = [];

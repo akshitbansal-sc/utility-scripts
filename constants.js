@@ -3,7 +3,6 @@ Promise.prototype.invoke = function() {
 }
 
 module.exports = {
-
     driver: {
         dbDriver: {
             url: 'http://db-driver.staging.sharechat.internal'
@@ -14,6 +13,12 @@ module.exports = {
         shard: 'dbDriverPOC',
         mauTableName: 'mauNotifications',
         db: 'sharechat-bt-test',
-        projectId: "sharechat-migration-test"
+        projectId: "sharechat-migration-test",
+        languages: [ "Malayalam", "Kannada", "Hindi", "Urdu", "Marathi", "Bengali", "Gujarati", "Punjabi", "Odia", "Bhojpuri", "Assamese", "Haryanvi", "Rajasthani", "Telugu", "Tamil", "Pidgin", "Bangladeshi",]
+    },
+    project: {
+        env: 'STAGING',
+        id: 'MOJ',
+        serviceName: 'sc-update-mau-v2'
     }
 }

@@ -1,5 +1,6 @@
 const dbDriver = require('dbdriver');
 const constants = require('../constants');
+const { parseUserFromBTWithDbDriverV1 } = require('./utility');
 
 
 class ReadBTWithDbDriverV1 {
@@ -27,7 +28,7 @@ class ReadBTWithDbDriverV1 {
             }
             const result = [];
             for (const row of items) {
-                const user = this.parseUserFromBTRowData(row);
+                const user = parseUserFromBTWithDbDriverV1(row);
                 result.push(user);
             }
             // console.log(result);
@@ -36,18 +37,6 @@ class ReadBTWithDbDriverV1 {
             console.error(e.message);
         }
     }
-
-    parseUserFromBTRowData(userInfo) {
-        let user = {};
-		if (!userInfo || !userInfo.userId) {
-            return null;
-        }
-        user.userId = Number(userInfo.userId.N);
-        user.expire = Number(userInfo?.expire?.N);
-        user.language = this.language;
-        user.state = userInfo.state ? userInfo.state.S : null;
-		return user;
-	}
 }
 
 // new ReadBTWithDbDriverV1().read();
