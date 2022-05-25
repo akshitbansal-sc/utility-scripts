@@ -10,12 +10,11 @@
     "db-driver-v2-client": "2.6.0",
     "dbdriver": "^1.13.1",
     "lodash": "^4.17.21",
+    "queue-driver": "^3.0.0",
     "uuid": "^8.3.2"
   },
   "devDependencies": {},
-  "scripts": {
-    
-  },
+  "scripts": {},
   "keywords": [],
   "author": "",
   "license": "ISC"

@@ -30,16 +30,16 @@ class ReadBTWithDbDriverV2 {
         .invoke();
       const result = [];
       if (err) throw err;
-      // console.log(err, data);
+    // console.log(err, data);
       if (!data) {
         console.log("no data");
         return;
       }
       for (const row of data) {
-        const user = parseUserFromBTRowData(row);
+        const user = parseUserFromBTWithDbDriverV2(row);
         result.push(user);
       }
-      // console.log(result);
+    // console.log(result);
       return result;
     } catch (e) {
       console.error(e);

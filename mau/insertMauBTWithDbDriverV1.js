@@ -70,5 +70,5 @@ class InsertMauBTWithDbDriverV1 {
     }
 }
 
-// new InsertMauBTWithDbDriverV1().insertData(5);
+// new InsertMauBTWithDbDriverV1().insertData(1);
 module.exports = InsertMauBTWithDbDriverV1;

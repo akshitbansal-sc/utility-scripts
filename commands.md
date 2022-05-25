@@ -1,6 +1,6 @@
 **To configure secret file to pick to be used as credentials for gcloud**
 ```
-GOOGLE_APPLICATION_CREDENTIALS=<PATH_TO_CONFIG>
+GOOGLE_APPLICATION_CREDENTIALS=~/config/gc/moj-stag.json
 ```
 
 

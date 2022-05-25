@@ -67,5 +67,5 @@ class InsertMauBTWithBTClient {
     }
 }
 
-// new InsertMauBTWithDbDriverV1().insertData();
+// new InsertMauBTWithBTClient().insertData();
 module.exports = InsertMauBTWithBTClient;

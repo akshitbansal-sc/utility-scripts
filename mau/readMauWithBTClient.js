@@ -6,23 +6,41 @@ class ReadMauWithBTClient {
     constructor() {
         this.mauBtClient = new Bigtable({ projectId: constants.mau.projectId })
             .instance(constants.mau.db).table(constants.mau.mauTableName);
+            this.shard = constants.mau.shard;
     }
 
 
     async read() {
         const rows = [];
-        await new Promise(async (resolve, reject) => {
-            this.mauBtClient.createReadStream({decode: false})
-            .on('error', (err) => {
-                this.utility.logError(`Error occurred while reading monthly active users langShard ${langShard}`, err, { isDebugLog: true });
-                return reject(err);
-            }).on('data', async (row) => {;
-            // for (const row of rows) {
-                rows.push(await parseUserFromBTWithBTClient(row.data));
-                resolve(true);
-            });
-        }).invoke();
-        // console.log(rows);
+        let counter = 0;
+        let invalid = 0;
+        const validateUser = (user) => {
+            return user && user.expire >= Math.floor(Date.now() / 1000);
+        }
+        try {
+            const readStream = await this.mauBtClient.createReadStream({
+                prefix: this.shard,
+                // other filters
+                // filter: {
+                //     condition: {
+                //         test: [{value: 'Maharashtra'}],
+                //         pass: { all: true },
+                //         fail: { all: false }
+                //     }
+                // }
+			});
+            for await (const row of readStream) {
+                const user = await parseUserFromBTWithBTClient(row.data);
+                console.log(user);
+                if (!validateUser(user)) {
+                    invalid++;
+                }
+				counter++;
+			}
+        } catch (e) {
+            console.log(e.message);
+        }
+        console.log(counter, invalid);
         return (rows);
     }
 

@@ -25,7 +25,7 @@ function parseUserFromBTWithDbDriverV2(data) {
   }
   // console.log(data.key);
   const user = {};
-  for (const [name, value] of Object.entries(data.data)) {
+  for (const [name, value] of Object.entries(data)) {
     //remove .data for readRowsWithKeys
     if (!value) {
       continue;
@@ -62,7 +62,7 @@ async function parseUserFromBTWithBTClient(data) {
         switch (colQualifier) {
             case 'expire':
             case 'userId':
-                parsedValue = ((value).readDoubleBE(0));
+                parsedValue = value.readDoubleBE(0);
                 break;
             default:
                 parsedValue = value.toString();
@@ -100,6 +100,31 @@ function parseUserFromBTWithDbDriverV1(userInfo) {
     return user;
 }
 
+function getDbDriver2FormattedData(langShard, data) {
+    const formattedData = {};
+    formattedData.key = getRowKeyForUserIdAndLanguageShard(
+      data.userId,
+      langShard
+    );
+    formattedData.updateSpecification = {};
+    formattedData.updateSpecification.userId = getDoubleBEBase64(
+      data.userId
+    );
+    formattedData.updateSpecification.language =
+      dbDriverBase64Util.encodeStringToBase64(langShard);
+    formattedData.updateSpecification.expire = getDoubleBEBase64(
+      data.expire
+    );
+    if (data.tenant) {
+        formattedData.updateSpecification.tenant = dbDriverBase64Util.encodeStringToBase64(data.tenant);
+    }
+    if (data.state) {
+      formattedData.updateSpecification.state =
+        dbDriverBase64Util.encodeStringToBase64(data.state);
+    }
+    return formattedData;
+  }
+
 module.exports = {
   parseUserFromBTWithDbDriverV2,
   getRowKeyForUserAndLanguage,
@@ -107,5 +132,6 @@ module.exports = {
   getLanguageShardForUserId,
   getDoubleBEBase64,
   parseUserFromBTWithBTClient,
-  parseUserFromBTWithDbDriverV1
+  parseUserFromBTWithDbDriverV1,
+  getDbDriver2FormattedData
 };

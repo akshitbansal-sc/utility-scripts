@@ -4,7 +4,7 @@ const dbDriverBase64Util =
 const crc32 = require("crc-32");
 const { v4: uuidv4 } = require("uuid");
 const constants = require("../constants");
-const { getRowKeyForUserIdAndLanguageShard, getDoubleBEBase64 } = require("./utility");
+const { getRowKeyForUserIdAndLanguageShard, getDoubleBEBase64, getDbDriver2FormattedData } = require("./utility");
 
 class InsertMauBTWithDbDriverV2 {
   constructor() {
@@ -16,7 +16,6 @@ class InsertMauBTWithDbDriverV2 {
     };
 
     this.dbDriver = new DBDriverClientV2(dbDriverConfiguration);
-    this.tableName = constants.mauTableName;
     this.shard = constants.mau.shard;
     this.tableName = constants.mau.mauTableName;
   }
@@ -26,8 +25,22 @@ class InsertMauBTWithDbDriverV2 {
     for (let i = 0; i < no; ++i) {
       userIds.push(Math.abs(crc32.str(uuidv4())));
     }
-    const res = await this.batchUpdate(userIds);
-    return res;
+    const batches = no / 1000;
+    let promises = [];
+    for (let batch = 0; batch < batches; batch++) {
+        const userIdsBatch = userIds.slice(batch * 1000, Math.min(no, (batch + 1) * 1000));
+        promises.push(this.batchUpdate(userIdsBatch));
+        if (promises.length === 10) {
+            await Promise.all(promises);
+            promises = [];
+        }
+    }
+    if (promises.length) {
+        await Promise.all(promises);
+        promises = [];
+    }
+    console.log('done');
+    // return res;
   }
 
   async batchUpdate(userIds) {
@@ -37,6 +50,7 @@ class InsertMauBTWithDbDriverV2 {
         userId,
         state: "Maharashtra",
         expire,
+        // tenant: 'moj'
       });
     });
     try {
@@ -68,5 +82,5 @@ class InsertMauBTWithDbDriverV2 {
 
 }
 
-// new InsertMauBTWithDbDriverV2().insertData(5);
+// new InsertMauBTWithDbDriverV2().insertData(1);
 module.exports = InsertMauBTWithDbDriverV2;
