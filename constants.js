@@ -10,15 +10,16 @@ module.exports = {
     },
     mau: {
         mauLang: 'dbDriverPOC',
-        shard: 'testShard',
-        mauTableName: 'mauNotifications',
-        db: 'sharechat-bt-test',
-        projectId: "sharechat-migration-test",
+        shard: '0_Hindi',
+        mauTableName: 'mauNotificationsV2',
+        db: 'production-bt-3',
+        projectId: "moj-prod",
         languages: [ "Malayalam", "Kannada", "Hindi", "Urdu", "Marathi", "Bengali", "Gujarati", "Punjabi", "Odia", "Bhojpuri", "Assamese", "Haryanvi", "Rajasthani", "Telugu", "Tamil", "Pidgin", "Bangladeshi",]
     },
     project: {
-        env: 'STAGING',
+        env: 'PRODUCTION',
         id: 'MOJ',
-        serviceName: 'sc-update-mau-v2'
+        serviceName: 'job-update-attributes-mau',
+        // name: 'moj-prod'
     }
 }

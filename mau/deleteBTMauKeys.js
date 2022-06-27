@@ -18,15 +18,15 @@ class DeleteBTMauKeys {
 
 
     async deleteUsers() {
-        const [{data}, err] = await this.dbDriverV2.fullTableScan(this.tableName).invoke();
-        if (!data) {
-            console.log('no data');
-            return;
-        }
-        const keys = [];
-        for (const row of data) {
-            keys.push(row.key[0].value);
-        }
+        // const [{data}, err] = await this.dbDriverV2.fullTableScan(this.tableName).invoke();
+        // if (!data) {
+        //     console.log('no data');
+        //     return;
+        // }
+        const keys = ['0_Hindi#0000000000050102974'];
+        // for (const row of data) {
+        //     keys.push(row.key[0].value);
+        // }
         for (let key of keys) {await this.#deleteUsers(key)};
         console.error('deleted ', keys.length);
     }

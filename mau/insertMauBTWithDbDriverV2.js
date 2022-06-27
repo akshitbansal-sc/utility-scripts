@@ -4,7 +4,7 @@ const dbDriverBase64Util =
 const crc32 = require("crc-32");
 const { v4: uuidv4 } = require("uuid");
 const constants = require("../constants");
-const { getRowKeyForUserIdAndLanguageShard, getDoubleBEBase64, getDbDriver2FormattedData } = require("./utility");
+const { getLanguageShardForUserId, getRowKeyForUserIdAndLanguageShard, getDoubleBEBase64, getDbDriver2FormattedData } = require("./utility");
 
 class InsertMauBTWithDbDriverV2 {
   constructor() {
@@ -50,7 +50,7 @@ class InsertMauBTWithDbDriverV2 {
         userId,
         state: "Maharashtra",
         expire,
-        // tenant: 'moj'
+        tenant: 'moj'
       });
     });
     try {
@@ -68,12 +68,14 @@ class InsertMauBTWithDbDriverV2 {
         userId: getDoubleBEBase64(userId),
         language: dbDriverBase64Util.encodeStringToBase64(langShard),
         state: dbDriverBase64Util.encodeStringToBase64(state),
-        expire: getDoubleBEBase64(expire)
+        expire: getDoubleBEBase64(expire),
+        tenant: dbDriverBase64Util.encodeStringToBase64('mojtt~')
     };
     const key = getRowKeyForUserIdAndLanguageShard(userId,
         langShard);
     try {
         await this.dbDriver.update(this.tableName, key, data);
+        console.log('done');
         return data;
     } catch (e) {
         console.log(e.message);
@@ -82,5 +84,8 @@ class InsertMauBTWithDbDriverV2 {
 
 }
 
-// new InsertMauBTWithDbDriverV2().insertData(1);
+// new InsertMauBTWithDbDriverV2().singleUpdate(50175, '0_Hindi', 'Gujrat');
+// new InsertMauBTWithDbDriverV2().singleUpdate(50101467, '0_Hindi', 'Punjab');
+// new InsertMauBTWithDbDriverV2().singleUpdate(50103383, '0_Hindi', 'Gujrat');
+new InsertMauBTWithDbDriverV2().singleUpdate(50102802, getLanguageShardForUserId(50102802, 'Rajasthani'), 'Punjab');
 module.exports = InsertMauBTWithDbDriverV2;

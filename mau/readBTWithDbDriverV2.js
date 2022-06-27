@@ -5,6 +5,7 @@ const {
   parseUserFromBTWithDbDriverV2,
   getLanguageShardForUserId,
   getRowKeyForUserIdAndLanguageShard,
+  getRowKeyForUserAndLanguage,
 } = require("./utility");
 
 class ReadBTWithDbDriverV2 {
@@ -48,19 +49,23 @@ class ReadBTWithDbDriverV2 {
 
   async getUserIdForAllLanguages(userId) {
     const languages = constants.mau.languages;
+    // const rowKeys = [getRowKeyForUserAndLanguage(userId, langua)]
+    
     const rowKeys = languages.map((language) => {
       const langShard = getLanguageShardForUserId(userId, language);
       return getRowKeyForUserIdAndLanguageShard(userId, langShard);
     });
 
+
     try {
       const data = await this.dbDriver.batchReadRow(this.tableName, rowKeys);
-      return data.rows.map(parseUserFromBTRowData);
+      console.log(data.rows.map(parseUserFromBTWithDbDriverV2));
     } catch (e) {
       console.log(e);
     }
   }
 }
 
-// new ReadBTWithDbDriverV2().read();
+new ReadBTWithDbDriverV2().getUserIdForAllLanguages(93659421421);
+// new ReadBTWithDbDriverV2().getUserIdForAllLanguages(96169465521);
 module.exports = ReadBTWithDbDriverV2;
