@@ -25,8 +25,9 @@ function parseUserFromBTWithDbDriverV2(data) {
   }
   // console.log(data.key);
   const user = {};
-  for (const [name, value] of Object.entries(data)) {
+  for (let [name, value] of Object.entries(data.data)) {
     //remove .data for readRowsWithKeys
+    // value = value[0].value;
     if (!value) {
       continue;
     }
@@ -36,9 +37,6 @@ function parseUserFromBTWithDbDriverV2(data) {
       case "userId":
         // the integer will be read by double BE
         parsedValue = Buffer.from(value, "base64").readDoubleBE(0);
-        break;
-      case "key":
-        parsedValue = value;
         break;
       default:
         // string will be read by decoding the string
