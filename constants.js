@@ -5,21 +5,21 @@ Promise.prototype.invoke = function() {
 module.exports = {
     driver: {
         dbDriver: {
-            url: 'http://db-driver.staging.sharechat.internal'
+            url: 'http://db-driver.staging.moj.internal'
         }
     },
     mau: {
-        mauLang: 'dbDriverPOC',
-        shard: '0_Hindi',
+        mauLang: 'Marathi',
+        shard: '1_Urdu#',
         mauTableName: 'mauNotificationsV2',
         db: 'production-bt-3',
         projectId: "moj-prod",
-        languages: [ "Malayalam", "Kannada", "Hindi", "Urdu", "Marathi", "Bengali", "Gujarati", "Punjabi", "Odia", "Bhojpuri", "Assamese", "Haryanvi", "Rajasthani", "Telugu", "Tamil", "Pidgin", "Bangladeshi",]
+        languages: [ "Malayalam", "Kannada", "Hindi", "Urdu", "Marathi", "Bengali", "Gujarati", "Punjabi", "Odia", "Bhojpuri", "Assamese", "Haryanvi", "Rajasthani", "Telugu", "Tamil", "Pidgin", "Bangladeshi", 'English']
     },
     project: {
-        env: 'PRODUCTION',
+        env: 'STAGING',
         id: 'MOJ',
-        serviceName: 'job-update-attributes-mau',
+        serviceName: 'sc-update-mau-v2',
         // name: 'moj-prod'
     }
 }

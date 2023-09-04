@@ -1,38 +1,30 @@
-/*
-Pod commands
-cd /
-mkdir /tst
-cd /tst
-npm init -y
-npm i ioredis@3.2.2
-apt-get install vim -y
-vi index.js
-
--- copy paste, close
-node index.js > app.log
-
--- open another shell of same pod
-tail -f /tst/app.log | grep 2828
-
-*/
-
-
 const Redis = require('ioredis');
-const redisHost = [ {
-	host: '',
-	port: 6379
-} ];
+const { get, put } = require('../rocksdb/index');
+const hosts = ``.split(',')
+    .map((el) => {
+        return {
+            host: el,
+            port: 6379,
+        }
+    })
 const redisOptions = {
 	redisOptions: {
 		password: ''
 	}
 };
-let cache = new Redis.Cluster(redisHost, redisOptions);
 
-setTimeout(async () => {
-    try {
-        console.log(2828, await cache.get('profile/croppedImage/586'));
-    } catch (err) {
-        console.log(2828, err.message);
-    }
-}, 10000);
+
+
+let cache = new Redis.Cluster(hosts, redisOptions, { scaleReads: 'all' });
+
+const posts = [ '123' ];
+const id = 'CREATOR-UNDERPERFORMING/UnderPerformingInfluencersQueryMoj2';
+const id1 = 'dct*';
+(async function() {
+    console.log(await cache.get(id));
+    console.log(await cache.set('post/croppedImage/3108946584', JSON.stringify({
+        image: 'https://cdn-stag.sharechat.com/4c7fac97-2dca-4bbc-a2ca-5c96e9184d78_original_keyframe_00_02.jpg',
+        thumb: 'https://cdn-stag.sharechat.com/4c7fac97-2dca-4bbc-a2ca-5c96e9184d78_original_keyframe_00_02.jpg',
+    })));
+})()
+
